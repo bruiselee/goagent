@@ -760,12 +760,22 @@ class Http(object):
                 if line == '\r\n':
                     continue
                 if ';' in line:
-                    line, _ = line.split(';', 1)
-                count = int(line , 16)
-                if count == 0:
-                    break
+                    partline, _ = line.split(';', 1)
                 else:
-                    write(rfile.read(count))
+                    partline = line
+                if len(partline) < 5: 
+                    count = int(partline , 16)
+                    if count == 0:
+                        break
+                    else:
+                        write(rfile.read(count))
+                else
+                    write(line)
+                    while 1:
+                        data = rfile.read(bufsize)
+                        if not data:
+                            break
+                        write(data)                                          
         elif content_length:
             left = content_length
             while left > 0:
